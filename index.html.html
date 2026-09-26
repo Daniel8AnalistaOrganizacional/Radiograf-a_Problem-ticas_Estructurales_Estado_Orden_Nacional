@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problemáticas en la Estructura de la Rama Ejecutiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 30;
+        }
+
+        .logo-box {
+            background-color: rgba(241, 245, 249, 0.95);
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-left {
+            height: 95px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .main-container {
+            position: relative;
+            width: 850px;
+            height: 850px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-video-container {
+            position: absolute;
+            width: 280px;
+            height: 380px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+            border: 2px solid #38bdf8;
+            z-index: 10;
+            background-color: #000;
+        }
+
+        .center-video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .node-button {
+            position: absolute;
+            width: 150px;
+            height: 65px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            line-height: 1.2;
+            z-index: 20;
+        }
+
+        .node-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .bg-estructura {
+            background: linear-gradient(135deg, #1e3a8a, #0284c7);
+            border: 1px solid #38bdf8;
+            color: #ffffff;
+        }
+
+        .bg-empleo {
+            background: linear-gradient(135deg, #065f46, #0d9488);
+            border: 1px solid #2dd4bf;
+            color: #ffffff;
+        }
+
+        .category-header {
+            position: absolute;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 20px;
+            z-index: 15;
+        }
+
+        .header-estructura {
+            top: 20px;
+            background: rgba(2, 132, 199, 0.2);
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+        }
+
+        .header-empleo {
+            bottom: 20px;
+            background: rgba(13, 148, 136, 0.2);
+            color: #2dd4bf;
+            border: 1px solid #2dd4bf;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 16px;
+            max-width: 650px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Redes Sociales y Contactos en Esquina Inferior Izquierda */
+        .social-contacts {
+            position: fixed;
+            bottom: 24px;
+            left: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 40;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(6px);
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(71, 85, 105, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        a.social-item:hover {
+            color: #38bdf8;
+            transform: translateX(3px);
+        }
+
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="logo-box">
+            <img src="https://drive.google.com/thumbnail?id=1Uoj0l7cixxeVrTMrSSNoKljzGLICt7JI&sz=w500" alt="Daniel Ochoa - Membrete" class="logo-left">
+        </div>
+
+        <h1 class="text-center text-lg md:text-xl font-bold text-slate-200 max-w-2xl leading-snug flex-1 px-4">
+            Problemáticas en la Estructura de la Rama Ejecutiva - Orden Nacional y sobre el Empleo Público / Propuesta de Soluciones
+        </h1>
+
+        <div class="text-right min-w-[200px]">
+            <div class="text-xl font-black tracking-wider text-sky-400">DANIEL OCHOA</div>
+            <div class="text-xs tracking-widest text-slate-400">ANALISTA ORGANIZACIONAL Y DE EMPLEO PÚBLICO</div>
+        </div>
+    </header>
+
+    <div class="main-container" id="circleContainer">
+        <div class="category-header header-estructura">ESTRUCTURA DEL ESTADO</div>
+        <div class="category-header header-empleo">EMPLEO PÚBLICO</div>
+
+        <div class="center-video-container" id="videoBox">
+            <iframe 
+                id="centerFrame" 
+                src="https://drive.google.com/file/d/1eMFxeWqc_0u7OCStk-I1oEeBzR-3A7U5/preview" 
+                allow="autoplay"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Contactos Inferior Izquierda con Íconos -->
+    <div class="social-contacts">
+        <!-- Enlace a LinkedIn -->
+        <a href="https://www.linkedin.com/in/daniel-ochoa-d8a" target="_blank" rel="noopener noreferrer" class="social-item">
+            <svg class="social-icon text-sky-400" viewBox="0 0 24 24">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+            </svg>
+            <span>www.linkedin.com/in/daniel-ochoa-d8a</span>
+        </a>
+
+        <!-- Texto Copiable de WhatsApp -->
+        <div class="social-item cursor-text select-all">
+            <svg class="social-icon text-emerald-400" viewBox="0 0 24 24">
+                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c4.55 0 8.24 3.69 8.24 8.24 0 4.55-3.69 8.24-8.24 8.24-1.48 0-2.92-.4-4.18-1.15l-.3-.18-3.11.82.83-3.03-.2-.32a8.2 8.2 0 0 1-1.26-4.38c0-4.55 3.69-8.24 8.24-8.24m4.52 10.22c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.65.81-.8 1-.15.18-.29.2-.54.08-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.15-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.56-1.35-.77-1.85c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.47-.6 1.68-1.18.2-.58.2-1.08.14-1.18-.06-.1-.23-.17-.48-.3z"/>
+            </svg>
+            <span>@Daniel8ASmartView</span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal-card">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+            <h2 id="modalTitle" class="text-lg font-bold text-sky-400 mb-3 pr-6"></h2>
+            
+            <div id="drivePlayerContainer" class="mb-4 hidden">
+                <iframe id="driveAudioFrame" src="" width="100%" height="160" class="rounded-lg border border-slate-700 bg-black"></iframe>
+            </div>
+
+            <div id="modalContent" class="text-slate-300 text-sm leading-relaxed mb-6 space-y-3 max-h-72 overflow-y-auto pr-2"></div>
+            
+            <div class="flex flex-wrap gap-3 items-center justify-end border-t border-slate-700 pt-4">
+                <button id="showMediaBtn" onclick="toggleDrivePlayer()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
+                    ▶️ Ver / Escuchar Explicación (MP4)
+                </button>
+
+                <a id="driveLinkBtn" href="#" target="_blank" class="hidden bg-sky-600 hover:bg-sky-500 text-white font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
+                    📄 Abrir Documento en Drive
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const nodesData = [
+            {
+                id: 1,
+                group: 'estructura',
+                number: '1.',
+                title: 'Duplicidad de las naturalezas jurídicas de las entidades',
+                scriptText: `En este espacio vas a encontrar algo más que una explicación técnica: vas a ver, con ojos nuevos, cómo está construido el Estado que te gobierna. Aquí se desnuda el origen de muchas de las distorsiones del Orden Nacional, desde la Ley 489 de 1998, la norma de normas sobre la estructura de la administración pública.\n\nHoy todo el mundo habla de “duplicidad de entidades”, pero casi nadie sabe que desde 1998 existe una regla clarísima en el artículo 54 de la Ley 489 que ordena no duplicar institucionalidad y define qué hacer cuando se detectan organismos que hacen lo mismo. Esa norma quedó enterrada en el olvido. Los gobiernos de turno ampliaron la estructura del Gobierno Nacional sin coherencia, sin sindéresis y sin respeto por ese mandato, inflando el Estado como si no hubiera límites.\n\nCuando empieces a leer, te vas a encontrar con un dato incómodo: hay múltiples naturalezas jurídicas que, en la práctica, funcionan igual. Cambia el nombre, cambia el sello, pero la operación es la misma. No hay diferencia real en la función pública. El resultado es un Estado grande, hipertrofiado, pesado, anquilosado, que se mueve lento y gasta mucho para hacer lo mismo por vías distintas.\n\nPor ejemplo, ¿sabías que un Ministro y un Director de Departamento Administrativo tienen las mismas funciones y la misma responsabilidad en el orden nacional? Siempre nos han vendido la idea de que los ministerios son “políticos” y los departamentos administrativos “técnicos”. Las normas que vas a leer a continuación desmontan esa creencia: jurídicamente, hay una duplicidad real entre estas dos naturalezas, sin justificación funcional.\n\nEste análisis entra al detalle jurídico de cada problemática: desmenuza las naturalezas de las entidades, muestra dónde se repiten funciones, dónde se duplican estructuras, dónde se infla el Estado sin añadir valor. No es un texto ligero: es filigrana fina, argumento por argumento, para entender de verdad cómo se diseñó la arquitectura institucional y por qué hoy está distorsionada.\n\nAl final de esta infografía, en el botón inferior, podrás entrar a un análisis riguroso, profundo, lleno de detalles que te invito a leer sin prisa. Si te tomas el tiempo, vas a entender el contexto y la realidad estructural del Estado desde un punto vista jurídico y técnico. Y, quizá, después de leerlo, ya no vuelvas a mirar la administración pública con los mismos ojos.`,
+                driveUrl: 'https://drive.google.com/file/d/1QbAzbSpSfxwSPOUbfAJQZ6pWGs5Z5oJN/view?usp=sharing',
+                fileId: '1SDqYdyLSutPDxAMx_STs5_jvqEVHc0Oc'
+            },
+            { 
+                id: 2, 
+                group: 'estructura', 
+                number: '2.', 
+                title: 'Duplicidad de objetivos y funciones en las entidades del orden nacional', 
+                scriptText: 'Análisis detallado sobre los cruces misionales, solapamientos operacionales y la redundancia de funciones operativas entre distintas entidades dentro de la Rama Ejecutiva del orden nacional.',
+                driveUrl: 'https://drive.google.com/file/d/10xdTbZwNEM-z_w_sbiW1AVt0g0pW--zu/view?usp=sharing',
+                fileId: '1DT5flqS0wkDh5Af0X_b2soiuj80Jninq'
+            },
+            { 
+                id: 3, 
+                group: 'estructura', 
+                number: '3.', 
+                title: 'Alertas tempranas ante solicitudes de creación de entidades', 
+                scriptText: 'Mecanismo de alertas tempranas y criterios técnicos rigurosos para evaluar solicitudes de creación o modificación de entidades, evitando el crecimiento injustificado de la estructura pública.',
+                driveUrl: 'https://drive.google.com/file/d/1-NYSSfUoKV7eS4-toFOsySMuADcD7axc/view?usp=sharing',
+                fileId: '1Q6z9Toj8T_BlhC9bifs5_J3-1DhIp83U'
+            },
+            { 
+                id: 4, 
+                group: 'empleo', 
+                number: '4.', 
+                title: 'Problemáticas del empleo público - Escala Salarial', 
+                scriptText: 'Diagnóstico crítico sobre las distorsiones e inequidades en la estructura de la escala salarial del empleo público, identificando desajustes en la valoración de responsabilidades y perfiles.',
+                driveUrl: 'https://drive.google.com/file/d/17rlBnLNJjZd4oyxWJaIWezimEmj1BUZG/view?usp=sharing',
+                fileId: '1SzxofnNMBnnT8t6qLrrBH-H4moZ9UBfu'
+            },
+            { 
+                id: 5, 
+                group: 'empleo', 
+                number: '5.', 
+                title: 'Problemática sobre contenido funcional de los empleos - Cuadros Funcionales y Concurso de Méritos', 
+                scriptText: 'Análisis profundo sobre la necesidad de articular de forma rigurosa los cuadros funcionales de las entidades con los procesos del concurso de méritos, garantizando que la provisión de empleos responda fielmente a las cargas y contenidos reales del servicio.',
+                driveUrl: 'https://drive.google.com/file/d/1LTq7NX-F4M-ajhg9GfkfhsYR77RUMn-N/view?usp=sharing',
+                fileId: '1LcpWlxkU94BZMNh__VR7rHcVcwXbQIfn'
+            },
+            { 
+                id: 6, 
+                group: 'empleo', 
+                number: '6.', 
+                title: 'Problemáticas sobre el Acceso al Empleo Público', 
+                scriptText: 'Evaluación de las barreras institucionales, normativas y procedimentales que dificultan el ingreso equitativo, transparente y meritorio al empleo público.',
+                driveUrl: 'https://drive.google.com/file/d/1Z2lr5RpwbX5Sjo8w4uCgBkRms0R6HuX0/view?usp=sharing',
+                fileId: '1Qt817mqEwgDObL-VQzQ3LdmLtw8uKy3V'
+            },
+            { 
+                id: 7, 
+                group: 'empleo', 
+                number: '7.', 
+                title: 'Problemáticas de la Carrera Administrativa', 
+                scriptText: 'Diagnóstico exhaustivo sobre el estado de la Carrera Administrativa, identificando cuellos de botella en la movilidad laboral, la evaluación del desempeño y la protección del mérito público.',
+                driveUrl: 'https://drive.google.com/file/d/1NfSS7jqjxbd6pdodOTCSNpeFNUGUaqSQ/view?usp=sharing',
+                fileId: '1karRXdahqzauAzfMEkGN4SS0UoPt65Uh'
+            },
+            { 
+                id: 8, 
+                group: 'empleo', 
+                number: '8.', 
+                title: 'Problemática: tensión entre contrato por prestación de servicios y la carrera administrativa', 
+                scriptText: 'Análisis técnico y normativo sobre la fricción estructural entre el uso recurrente de contratos de prestación de servicios y la garantía del principio de mérito e ingreso formal a la carrera administrativa.',
+                driveUrl: 'https://drive.google.com/file/d/1aKQwz2dZ0vwkNrIgAOE5qV8RbJedq0Es/view?usp=sharing',
+                fileId: '1mInEPF-G1YZ4Xrheu2tmIGhO9WbgWDQr'
+            }
+        ];
+
+        let currentActiveFileId = null;
+
+        const container = document.getElementById('circleContainer');
+        const totalNodes = nodesData.length;
+        const radius = 330;
+
+        nodesData.forEach((node, index) => {
+            const angle = (-90 + (index * (360 / totalNodes))) * (Math.PI / 180);
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+
+            const btn = document.createElement('div');
+            btn.className = `node-button ${node.group === 'estructura' ? 'bg-estructura' : 'bg-empleo'}`;
+            btn.style.left = `calc(50% + ${x}px - 75px)`;
+            btn.style.top = `calc(50% + ${y}px - 32px)`;
+            btn.innerHTML = `<span><strong>${node.number}</strong> ${node.title}</span>`;
+            
+            btn.onclick = () => openModal(node);
+            container.appendChild(btn);
+        });
+
+        function openModal(node) {
+            document.getElementById('modalTitle').innerText = `${node.number} ${node.title}`;
+            
+            const formattedContent = node.scriptText.split('\n\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('modalContent').innerHTML = formattedContent;
+            
+            const playerContainer = document.getElementById('drivePlayerContainer');
+            const driveAudioFrame = document.getElementById('driveAudioFrame');
+            driveAudioFrame.src = '';
+            playerContainer.classList.add('hidden');
+
+            currentActiveFileId = node.fileId || null;
+
+            const mediaBtn = document.getElementById('showMediaBtn');
+            if (node.fileId) {
+                mediaBtn.classList.remove('hidden');
+            } else {
+                mediaBtn.classList.add('hidden');
+            }
+
+            const driveBtn = document.getElementById('driveLinkBtn');
+            if (node.driveUrl) {
+                driveBtn.href = node.driveUrl;
+                driveBtn.classList.remove('hidden');
+            } else {
+                driveBtn.classList.add('hidden');
+            }
+
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function toggleDrivePlayer() {
+            const playerContainer = document.getElementById('drivePlayerContainer');
+            const driveAudioFrame = document.getElementById('driveAudioFrame');
+
+            if (playerContainer.classList.contains('hidden')) {
+                driveAudioFrame.src = `https://drive.google.com/file/d/${currentActiveFileId}/preview`;
+                playerContainer.classList.remove('hidden');
+            } else {
+                driveAudioFrame.src = '';
+                playerContainer.classList.add('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+            document.getElementById('driveAudioFrame').src = '';
+            document.getElementById('drivePlayerContainer').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
